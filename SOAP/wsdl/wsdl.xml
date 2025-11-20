@@ -1,0 +1,72 @@
+<!-- soap/client/fake_wsdl/wsdl.xml
+     WSDL ficticio / ejemplo (muy simple) utilizado por el cliente Zeep localmente.
+     Zeep puede leer archivos wsdl vía file://ruta/al/wsdl.xml
+     Este WSDL es un stub que indica un servicio con operación GetDailySummary que devuelve datos.
+-->
+<definitions name="FakeSummaryService"
+             targetNamespace="http://example.com/fake/summary"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/fake/summary"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <types>
+    <xsd:schema targetNamespace="http://example.com/fake/summary">
+      <xsd:element name="GetDailySummaryRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="userId" type="xsd:int"/>
+            <xsd:element name="date" type="xsd:date"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="GetDailySummaryResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="pasos" type="xsd:int"/>
+            <xsd:element name="distancia_km" type="xsd:float"/>
+            <xsd:element name="calorias_quemadas" type="xsd:float"/>
+            <xsd:element name="minutos_activo" type="xsd:int"/>
+            <xsd:element name="minutos_sedentario" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+
+  <message name="GetDailySummaryRequestMsg">
+    <part name="parameters" element="tns:GetDailySummaryRequest"/>
+  </message>
+  <message name="GetDailySummaryResponseMsg">
+    <part name="parameters" element="tns:GetDailySummaryResponse"/>
+  </message>
+
+  <portType name="FakeSummaryPortType">
+    <operation name="GetDailySummary">
+      <input message="tns:GetDailySummaryRequestMsg"/>
+      <output message="tns:GetDailySummaryResponseMsg"/>
+    </operation>
+  </portType>
+
+  <binding name="FakeSummaryBinding" type="tns:FakeSummaryPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetDailySummary">
+      <soap:operation soapAction="GetDailySummary"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="FakeSummaryService">
+    <documentation>Fake external service for testing</documentation>
+    <port name="FakeSummaryPort" binding="tns:FakeSummaryBinding">
+      <soap:address location="http://localhost:9000/fake_summary"/>
+    </port>
+  </service>
+
+</definitions>
